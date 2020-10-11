@@ -6,14 +6,14 @@
 
 # Adapted from NASA Exoplanet Archive Insolation Flux formula. (https://exoplanetarchive.ipac.caltech.edu/docs/poet_calculations.html)
 def flux(l,semi): 
-    return ((1 / semi)**2)*l # Reciprical of the Semi-Major axis, squared, then multiplied by the Luminosity in Lsun
+    return ((1 / semi)**2)*l # Reciprocal of the Semi-Major axis, squared, then multiplied by the Luminosity in Lsun
 
 # From Kopparapu et al. 2014. Equation 5, Section 3.1, Page 9
 def auFromSeff(l, seff):
     return (l / seff)**0.5 # luminosity divided by the Seff, to the power of a half
 
 # Values from Kopparapu et al. 2014. Table 1, Page 12
-def getSeffBoundry(temp,zone):
+def getSeffBoundary(temp,zone):
     tS = temp - 5780 # Temperature delta
     #Adapted Formula: Seff = SeffSUN + a*tS + b*tS^2 + c*tS^3 + d*tS^4
     
@@ -27,8 +27,8 @@ def getSeffBoundry(temp,zone):
 
         return Kopparapu2014(SeffSUN,a,b,c,d,tS)
 
-    # Runnaway Greenhouse 1 Me
-    if (zone == "runnawayGreenhouse" or zone == "rg"):
+    # runaway Greenhouse 1 Me
+    if (zone == "runawayGreenhouse" or zone == "rg"):
         SeffSUN = 1.107
         a = 1.332*(10**-4)
         b = 1.580*(10**-8)
@@ -70,24 +70,24 @@ def init():
 
     print("This object's Seff: " + str(a))
 
-    recentVenus = getSeffBoundry(starTemp,"rv")
-    runnawayGreenhouse = getSeffBoundry(starTemp,"rg")
-    maximumGreenhouse = getSeffBoundry(starTemp,"mg")
-    earlyMars = getSeffBoundry(starTemp,"em")
+    recentVenus = getSeffBoundary(starTemp,"rv")
+    runawayGreenhouse = getSeffBoundary(starTemp,"rg")
+    maximumGreenhouse = getSeffBoundary(starTemp,"mg")
+    earlyMars = getSeffBoundary(starTemp,"em")
 
     print ("\n*** This systems HZ stats: ***")
 
     print ("\n DISTANCES IN AU\n")
 
     print("Recent Venus (1 Me): " + str(auFromSeff(luminosity,recentVenus)))
-    print("Runnaway Greenhouse (1 Me): " + str(auFromSeff(luminosity,runnawayGreenhouse)))
+    print("Runaway Greenhouse (1 Me): " + str(auFromSeff(luminosity,runawayGreenhouse)))
     print("Maximum Greenhouse (1 Me): " + str(auFromSeff(luminosity,maximumGreenhouse)))
     print("Early Mars (1 Me): " + str(auFromSeff(luminosity,earlyMars)))
 
     print("\n STELLAR FLUX (EFFECTIVE) \n")
 
     print("Recent Venus (1 Me): " + str(recentVenus))
-    print("Runnaway Greenhouse (1 Me): " + str(runnawayGreenhouse))
+    print("Runaway Greenhouse (1 Me): " + str(runawayGreenhouse))
     print("Maximum Greenhouse (1 Me): " + str(maximumGreenhouse))
     print("Early Mars (1 Me): " + str(earlyMars))
 
@@ -95,10 +95,10 @@ def init():
     if (a < earlyMars):
         print("This object is NOT in the Habitable Zone (Beyond Early Mars)")
     elif (a <= maximumGreenhouse and a >= earlyMars):
-        print("This object is in the Optimistic Habitable Zone (Early Mars)")
-    elif (a <= runnawayGreenhouse and a >= maximumGreenhouse):
-        print ("This object is in the Conservative Habitable Zone (Between Runnaway Greenhouse and Maximum Greenhouse)")
-    elif (a <= recentVenus and a >= runnawayGreenhouse):
-        print ("This object is in the Optimistic Habitable Zone (Between Recent Venus and Runnaway Greenhouse)")
+        print("This object is in the Optimistic Habitable Zone (Between Maximum Greenhouse and Early Mars)")
+    elif (a <= runawayGreenhouse and a >= maximumGreenhouse):
+        print ("This object is in the Conservative Habitable Zone (Between Runaway Greenhouse and Maximum Greenhouse)")
+    elif (a <= recentVenus and a >= runawayGreenhouse):
+        print ("This object is in the Optimistic Habitable Zone (Between Recent Venus and Runaway Greenhouse)")
 
 init()
